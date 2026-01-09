@@ -1,7 +1,9 @@
+import SoundPlayer from './components/sound-player';
+
 function App() {
   return (
     <>
-      <h1>Hello</h1>
+      <SoundPlayer />
     </>
   );
 }
