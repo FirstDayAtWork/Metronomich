@@ -10,10 +10,18 @@ export default function BpmSlider(props: BpmSliderProps) {
   const { handleBpmValue, bpmValue } = props;
 
   return (
-    <div className={cn('flex w-full flex-col items-center p-2 text-8xl')}>
-      <output htmlFor="bpm">{bpmValue}</output>
+    <div
+      className={cn(
+        'justify-centerust relative flex w-[65%] flex-col items-center rounded-2xl text-8xl',
+      )}
+    >
+      <output className={cn('text-primary pointer-events-none')} htmlFor="bpm">
+        {bpmValue}
+      </output>
       <input
-        className={cn('h-15 w-full')}
+        className={cn(
+          'absolute z-1 h-full w-full opacity-0 [direction:rtl] [writing-mode:vertical-lr] hover:cursor-ns-resize',
+        )}
         onChange={handleBpmValue}
         id="bpm"
         name="bpm-input"
