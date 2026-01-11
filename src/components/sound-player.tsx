@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import { sound } from '../utils/sound';
 import BpmSlider from './bpm-slider';
 import { cn } from '../utils/cn';
 import useDebounce from '../hooks/useDebounce';
 import Controls from './controls';
+import PlayButton from './play-button';
 
 export default function SoundPlayer() {
   const [isPlayed, setIsPlayed] = useState(false);
@@ -16,28 +17,32 @@ export default function SoundPlayer() {
 
   const delayedBpmValue = useDebounce(bpmValue, 350);
 
-  function handleBpmValue(event: ChangeEvent<HTMLInputElement>) {
+  const handleBpmValue = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setBpmValue(+event.target.value);
-  }
+  }, []);
 
-  function substract() {
-    if (bpmValue === 20) return;
-    setBpmValue((prev) => (prev -= 1));
-  }
+  const substract = useCallback(() => {
+    setBpmValue((prev) => {
+      if (prev === 20) return prev;
+      return (prev -= 1);
+    });
+  }, []);
 
-  function add() {
-    if (bpmValue === 200) return;
-    setBpmValue((prev) => (prev += 1));
-  }
+  const add = useCallback(() => {
+    setBpmValue((prev) => {
+      if (prev === 200) return prev;
+      return (prev += 1);
+    });
+  }, []);
 
-  function playPause() {
+  const playPause = useCallback(() => {
     if (!isPlayed) {
       setIsPlayed(true);
       return;
     }
 
     setIsPlayed(false);
-  }
+  }, [isPlayed]);
 
   useEffect(() => {
     if (!isPlayed) {
@@ -86,31 +91,7 @@ export default function SoundPlayer() {
 
       <Controls substract={substract} add={add} />
 
-      <div className={cn('relative')}>
-        <button className={cn('hover:cursor-pointer')} onClick={playPause}>
-          {isPlayed ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="88px"
-              viewBox="0 -960 960 960"
-              width="88px"
-              fill="oklch(0.645 0.246 16.439)"
-            >
-              <path d="M330-330h300v-300H330v300ZM480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-156t86-127Q252-817 325-848.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 82-31.5 155T763-197.5q-54 54.5-127 86T480-80Z" />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="88px"
-              viewBox="0 -960 960 960"
-              width="88px"
-              fill="oklch(0.696 0.17 162.48)"
-            >
-              <path d="m383-310 267-170-267-170v340Zm97 230q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-156t86-127Q252-817 325-848.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 82-31.5 155T763-197.5q-54 54.5-127 86T480-80Z" />
-            </svg>
-          )}
-        </button>
-      </div>
+      <PlayButton isPlayed={isPlayed} playPause={playPause} />
     </div>
   );
 }

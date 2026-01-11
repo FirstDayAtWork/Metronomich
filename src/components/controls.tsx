@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { cn } from '../utils/cn';
 
 type ControlsProps = {
@@ -5,7 +6,7 @@ type ControlsProps = {
   add: () => void;
 };
 
-export default function Controls(props: ControlsProps) {
+function Controls(props: ControlsProps) {
   const { substract, add } = props;
 
   return (
@@ -36,3 +37,5 @@ export default function Controls(props: ControlsProps) {
     </div>
   );
 }
+
+export default memo(Controls);

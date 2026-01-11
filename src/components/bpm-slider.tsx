@@ -1,4 +1,4 @@
-import type { ChangeEvent } from 'react';
+import { memo, type ChangeEvent } from 'react';
 import { cn } from '../utils/cn';
 
 type BpmSliderProps = {
@@ -6,7 +6,7 @@ type BpmSliderProps = {
   bpmValue: number;
 };
 
-export default function BpmSlider(props: BpmSliderProps) {
+function BpmSlider(props: BpmSliderProps) {
   const { handleBpmValue, bpmValue } = props;
 
   return (
@@ -34,3 +34,5 @@ export default function BpmSlider(props: BpmSliderProps) {
     </div>
   );
 }
+
+export default memo(BpmSlider);
