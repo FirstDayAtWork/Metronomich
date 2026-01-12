@@ -2,4 +2,4 @@
 
 <p>Basic Metronome app</p>
 
-<img src="./metronomich-preview.png"/>
+<img src="public/metronomich-preview.png"/>
