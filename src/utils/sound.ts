@@ -1,1 +1,1 @@
-export const sound = new Audio('/rs.wav');
+export const sound = new Audio('./rs.wav');

@@ -20,7 +20,7 @@ function ControlButton(props: ControlButtonProps) {
       )}
       onClick={callback}
     >
-      <img src={'/' + imgSrc} alt={altName} />
+      <img src={'./' + imgSrc} alt={altName} />
     </button>
   );
 }
