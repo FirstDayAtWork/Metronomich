@@ -4,7 +4,7 @@ import { sound } from '../utils/sound';
 import BpmSlider from './bpm-slider';
 import { cn } from '../utils/cn';
 import useDebounce from '../hooks/useDebounce';
-import Controls from './controls';
+import Controls from './controls/controls';
 import PlayButton from './play-button';
 
 export default function SoundPlayer() {
@@ -22,17 +22,11 @@ export default function SoundPlayer() {
   }, []);
 
   const substract = useCallback(() => {
-    setBpmValue((prev) => {
-      if (prev === 20) return prev;
-      return (prev -= 1);
-    });
+    setBpmValue((prev) => (prev -= 1));
   }, []);
 
   const add = useCallback(() => {
-    setBpmValue((prev) => {
-      if (prev === 200) return prev;
-      return (prev += 1);
-    });
+    setBpmValue((prev) => (prev += 1));
   }, []);
 
   const playPause = useCallback(() => {
@@ -89,7 +83,7 @@ export default function SoundPlayer() {
 
       <BpmSlider handleBpmValue={handleBpmValue} bpmValue={bpmValue} />
 
-      <Controls substract={substract} add={add} />
+      <Controls substract={substract} add={add} bpmValue={bpmValue} />
 
       <PlayButton isPlayed={isPlayed} playPause={playPause} />
     </div>
