@@ -31,7 +31,7 @@ function BpmSlider(props: BpmSliderProps) {
         />
 
         <input
-          className={cn('accent-chart-1 m-4 max-h-12 w-full')}
+          className={cn('range range-info range-lg m-4')}
           onChange={handleBpmValue}
           id="bpm"
           name="bpm-input"

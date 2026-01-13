@@ -6,7 +6,8 @@ import { cn } from '../utils/cn';
 import useDebounce from '../hooks/useDebounce';
 import PlayButton from './play-button';
 import { signatureList } from '../utils/time-singature-list';
-import TimeSignature from './time-signature/time-signature';
+import TimeSignature from './time-signature';
+import BeatCounter from './beat-counter';
 
 export default function SoundPlayer() {
   const [isPlayed, setIsPlayed] = useState(false);
@@ -88,19 +89,21 @@ export default function SoundPlayer() {
   return (
     <div
       className={cn(
-        'bg-dark border-border relative m-auto flex h-full max-h-150 min-h-77.5 w-full max-w-3xl min-w-77.5 flex-col items-center justify-evenly rounded-4xl border-5 p-10 font-mono max-md:max-h-full max-md:rounded-none max-md:border-none',
+        'card bg-dark border-border m-auto flex h-full max-h-150 min-h-77.5 w-full max-w-3xl min-w-77.5 flex-col items-center justify-evenly rounded-4xl border-5 p-10 font-mono max-md:max-h-full max-md:rounded-none max-md:border-none',
       )}
     >
-      <div
+      {/* <div
         ref={beatRef}
-        className={cn('absolute inset-0 rounded-4xl', isPlayed && 'metronome-pulse')}
-      ></div>
+        className={cn('absolute inset-0 rounded-full', isPlayed && 'metronome-pulse')}
+        ></div> */}
 
       <TimeSignature
         signatureList={signatureList}
         timeSignature={timeSignature}
         handleSignatureChange={handleSignatureChange}
       />
+
+      <BeatCounter timeSignature={timeSignature} beatCount={() => counterRef.current} />
 
       <BpmSlider
         handleBpmValue={handleBpmValue}
