@@ -6,7 +6,7 @@ export type SignatureList = {
 
 const signatureList: SignatureList[] = [];
 
-for (let i = 1; i <= 4; i += 1) {
+for (let i = 2; i <= 4; i += 1) {
   signatureList.push({
     name: `${i}/${4}`,
     topNum: i,

@@ -12,10 +12,10 @@ import BeatCounter from './beat-counter';
 export default function SoundPlayer() {
   const [isPlayed, setIsPlayed] = useState(false);
   const [bpmValue, setBpmValue] = useState(100);
-  const [timeSignature, setTimeSignature] = useState(signatureList[3]);
+  const [beatCounter, setBeatCounter] = useState(0);
+  const [timeSignature, setTimeSignature] = useState(signatureList[2]);
 
   const intervalRef = useRef<number>(null);
-  const beatRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<number>(0);
 
   const delayedBpmValue = useDebounce(bpmValue, 350);
@@ -65,15 +65,12 @@ export default function SoundPlayer() {
       sound.pause();
       sound.currentTime = 0;
 
-      if (beatRef.current) {
-        beatRef.current.style.animationDuration = `${60000 / delayedBpmValue}ms`;
-      }
-
       sound.playbackRate = counterRef.current % timeSignature.topNum === 0 ? 1.2 : 1;
       sound.volume = counterRef.current % timeSignature.topNum === 0 ? 1 : 0.5;
 
       sound.play();
       counterRef.current += 1;
+      setBeatCounter((counterRef.current - 1) % timeSignature.topNum);
       intervalRef.current = setTimeout(repeat, 60000 / delayedBpmValue);
     }
 
@@ -89,21 +86,16 @@ export default function SoundPlayer() {
   return (
     <div
       className={cn(
-        'card bg-dark border-border m-auto flex h-full max-h-150 min-h-77.5 w-full max-w-3xl min-w-77.5 flex-col items-center justify-evenly rounded-4xl border-5 p-10 font-mono max-md:max-h-full max-md:rounded-none max-md:border-none',
+        'bg-dark border-border-dark m-auto flex h-full max-h-150 min-h-77.5 w-full max-w-3xl min-w-77.5 flex-col items-center justify-evenly rounded-4xl border-5 p-10 font-mono max-md:max-h-full max-md:rounded-none max-md:border-none',
       )}
     >
-      {/* <div
-        ref={beatRef}
-        className={cn('absolute inset-0 rounded-full', isPlayed && 'metronome-pulse')}
-        ></div> */}
-
       <TimeSignature
         signatureList={signatureList}
         timeSignature={timeSignature}
         handleSignatureChange={handleSignatureChange}
       />
 
-      <BeatCounter timeSignature={timeSignature} beatCount={() => counterRef.current} />
+      <BeatCounter timeSignature={timeSignature} currentBeat={beatCounter} isPlayed={isPlayed} />
 
       <BpmSlider
         handleBpmValue={handleBpmValue}
