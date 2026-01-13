@@ -41,15 +41,15 @@ body {
 
 @keyframes beat-pulse {
   0% {
-    box-shadow: 0 0 0 0 var(--chart-4);
+    box-shadow: inset 0 0 100px 50px var(--chart-4);
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 0 15px rgba(59, 130, 246, 0);
+    box-shadow: inset 0 0 50px 25px rgba(59, 130, 246, 0);
     transform: scale(1.05);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    box-shadow: inset 0 0 0 rgba(59, 130, 246, 0);
     transform: scale(1);
   }
 }

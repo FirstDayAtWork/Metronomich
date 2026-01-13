@@ -11,7 +11,7 @@ function PlayButton(props: PlayButtonProps) {
 
   return (
     <div className={cn('relative')}>
-      <button className={cn('hover:cursor-pointer')} onClick={playPause}>
+      <button className={cn('hover:cursor-pointer hover:opacity-85')} onClick={playPause}>
         {isPlayed ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"

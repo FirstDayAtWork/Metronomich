@@ -4,29 +4,39 @@ import { sound } from '../utils/sound';
 import BpmSlider from './bpm-slider';
 import { cn } from '../utils/cn';
 import useDebounce from '../hooks/useDebounce';
-import Controls from './controls/controls';
 import PlayButton from './play-button';
+import { signatureList } from '../utils/time-singature-list';
+import TimeSignature from './time-signature/time-signature';
 
 export default function SoundPlayer() {
   const [isPlayed, setIsPlayed] = useState(false);
-  const intervalRef = useRef<number>(null);
-
-  const beatRef = useRef<HTMLDivElement>(null);
-
   const [bpmValue, setBpmValue] = useState(100);
+  const [timeSignature, setTimeSignature] = useState(signatureList[3]);
+
+  const intervalRef = useRef<number>(null);
+  const beatRef = useRef<HTMLDivElement>(null);
+  const counterRef = useRef<number>(0);
 
   const delayedBpmValue = useDebounce(bpmValue, 350);
+
+  const handleSignatureChange = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
+    const target = signatureList.find((item) => item.name === event.target.value);
+
+    if (target) {
+      setTimeSignature(target);
+    }
+  }, []);
 
   const handleBpmValue = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setBpmValue(+event.target.value);
   }, []);
 
   const substract = useCallback(() => {
-    setBpmValue((prev) => (prev -= 1));
+    setBpmValue((prev) => prev - 1);
   }, []);
 
   const add = useCallback(() => {
-    setBpmValue((prev) => (prev += 1));
+    setBpmValue((prev) => prev + 1);
   }, []);
 
   const playPause = useCallback(() => {
@@ -46,6 +56,7 @@ export default function SoundPlayer() {
 
       sound.pause();
       sound.currentTime = 0;
+      counterRef.current = 0;
       return;
     }
 
@@ -57,7 +68,11 @@ export default function SoundPlayer() {
         beatRef.current.style.animationDuration = `${60000 / delayedBpmValue}ms`;
       }
 
+      sound.playbackRate = counterRef.current % timeSignature.topNum === 0 ? 1.2 : 1;
+      sound.volume = counterRef.current % timeSignature.topNum === 0 ? 1 : 0.5;
+
       sound.play();
+      counterRef.current += 1;
       intervalRef.current = setTimeout(repeat, 60000 / delayedBpmValue);
     }
 
@@ -68,22 +83,31 @@ export default function SoundPlayer() {
         clearTimeout(intervalRef.current);
       }
     };
-  }, [delayedBpmValue, isPlayed]);
+  }, [delayedBpmValue, isPlayed, timeSignature.topNum]);
 
   return (
     <div
       className={cn(
-        'bg-dark border-border relative m-auto flex h-full max-h-77.5 min-h-77.5 w-full max-w-77.5 min-w-77.5 flex-col items-center justify-center rounded-full border-5 font-mono',
+        'bg-dark border-border relative m-auto flex h-full max-h-150 min-h-77.5 w-full max-w-3xl min-w-77.5 flex-col items-center justify-evenly rounded-4xl border-5 p-10 font-mono max-md:max-h-full max-md:rounded-none max-md:border-none',
       )}
     >
       <div
         ref={beatRef}
-        className={cn('absolute inset-0 rounded-full', isPlayed && 'metronome-pulse')}
+        className={cn('absolute inset-0 rounded-4xl', isPlayed && 'metronome-pulse')}
       ></div>
 
-      <BpmSlider handleBpmValue={handleBpmValue} bpmValue={bpmValue} />
+      <TimeSignature
+        signatureList={signatureList}
+        timeSignature={timeSignature}
+        handleSignatureChange={handleSignatureChange}
+      />
 
-      <Controls substract={substract} add={add} bpmValue={bpmValue} />
+      <BpmSlider
+        handleBpmValue={handleBpmValue}
+        bpmValue={bpmValue}
+        substract={substract}
+        add={add}
+      />
 
       <PlayButton isPlayed={isPlayed} playPause={playPause} />
     </div>
